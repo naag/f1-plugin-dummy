@@ -9,5 +9,6 @@ func main() {
 	plugin.NewServer().
 		WithScenario("dummyAdmission", scenarios.AdmissionScenario).
 		WithScenario("dummySubmission", scenarios.SubmissionScenario).
+		WithScenario("sqsScenario", scenarios.SqsScenario).
 		Serve()
 }

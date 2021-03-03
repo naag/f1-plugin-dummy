@@ -1,0 +1,26 @@
+if: (type IN (push, cron) AND branch = master) OR (type = pull_request)
+language: go
+go:
+- 1.13.x
+sudo: required
+env:
+  global:
+  - SECSCAN_IMAGE=288840537196.dkr.ecr.eu-west-1.amazonaws.com/tech.form3/secscan-go:latest
+  - secure: dQMbX6MZ8Pf7ERAg+LK0Eyy0YdraTgJBI5X2Bs7rXkNWzgNp9Qwq8RN1KPlWPwVyQkpViKRIFQh1RB5JkP0AMohNVfEnrHNMpHkzc+wlNWlAOFlyWNSg45zuZRCHQ4Es8bkoPfz+IrLxcpxxwj2rPU5U5eOoVmyB6Anm15NkEmlAvWQRmWyEGGDeM4H5pnbr1TVGerEW390alU2ZjmSmfpBws/s+AzzMwpbj784OZ1JnIwigOTM5Zc+BmWd93N8x1zRVFlMzMiVteEEUSw+PcuEoC2SlEWcTdhS+E43aLbQI6yeLdhl2qr8E9rO4QXi/A9iAK289erubHXURtCwTd2mzTybcVg5iHWYrXrUnNiplos/Jxov9gHyRhDdyFDhocM8I2CD0h+MtcZkab23mEWEb4kl9gr6nb4l7dvk+zr2rlGGbnhWSuUjUzFZNC+WLOwlsLy7C0vFoeWF53MghZppvQwIl+95wkCU/zxj6MOeH6oi98XzZ4ydQy94+Rm4MayVSMWCpgOs5u4ig9Mb87Hjk4lxpjqV+xF3UrB65nc5aXyEOOkktpEdUhLutAvOJWDVwCY923f2drnBqzxQ0z3k8/Y7N12CeZs6MmdwXSK8MV7SgyQ3Bj/l/oGOeZOIaAv+GWTQE1X9NazvHYvbSUubLaL3HkiwjfIMEQYq9tlc=
+  - secure: jh6fLUduCK60dIhCrOBsDu80YXj2hkgly4/q1rP1mBQT91d9TpjpyLEVPVdpqZg7aMARv6EfMXJRpFeANPqc7eU3M/oR5Y4h2eAEcI7lwdw364+/PqFXy+CMvxOn3EH0wh9sdIQZjB4mnrAVSDcQAqXRZA0Mln43Fe/fMkHg1gtSBRTkwJdcQnEYY/kWF/hvs4H+I3BUe6rh/UjNq0go5+ZKmRN6zdc+PvPulqZdGjRETyZXkgwvX6AzfkzTlhYMZHP7DImdUdezDOnXUKyOkNtc6P/NkoiNDV33SmXQbUyrKbFhC9Kx5FkbBBVPPWjUNpbBVllvF6dn3lmh1bLw/KMQYy2A5t6JNb/8FXBkYF2T1eFYUH2JLKwPJN40EJ84U/2mHm4tt4vx75Rdbc9BRwr26IwB03O3txZZx42rPRnzUQlN8AT1dCrA3zIzb45vQPtThWble8CY73Mu2L7CsfO2g9jWgeUwcm/IESfxnk4sr3+6BnNGKSJpQaGzwVeDtcPlBGM6OQJvl7mt7sW7U2Aq16U/uDgqC5NqzpsEI2ogmWkYojPQXUpi7J/5FeoLQad77LI42l30Oh7kbZ5NWi6O3V/xwtDLjAgrHOL7zElQE/uuiBOlmMXfsj4jQ3jsIpUcp5SdLD+Lff80lt9asciooLv1/N7JQfVyENG72Rg=
+  - secure: omhEvXeFxpCo5eyUNJ0q1txdzspKfzrfMzWnQ9kDbNvy5pswmzgubRHb93uG60k7abAVgvNw12YFiWESz9FmT7qnfJdcfT1ZlIN6PS/yU/AS42fdJ79/MnSOtlGM/92rHaPCDixvr5aLxtZbe/QmSiFBwE0X8zL62Pk60NA0mofAIAJJ8xi01WfH1jWnx60BiAK8qzT7DfDymvci6qWJTaB7s762gbQSb7XDKChiYorERTDxYxErAoR0jKKLgRgJIqbI50LtuhlE6iWgLWgnHvl7z6PkJLBvbQrzrOE61pvg/smTH7opNPSKTEgWMUkOQiezH6aGBkPGTjF4NTrMR4qWRmAaBaJ8er8VbZq1cMbysQHy+4Xy1ZjJb0pUJm2Zf+sHK/TlyQA8tFWhO1BaN1w+5RKW2T5oUfxyx7afmmL+Xx/q4OSrg2Bmh7vhDUKpLN3jRGh810Mm64/3GXDlur+VGMIztu/OgLJwNnKkgMZAWlsdifZwP6XvoASRwK7Xtl2CjCp4lTjgbU/FOpiqnNfrskeh5xoctu9fUxJLqVTLT/noLhzdPXB8wtgMn1L2VdNpj8YJF8n+ElpczWIBWpoLp7r9iUIm3Q8NbxgF2YCuuRicClrQfOve8yt0XCWauzF/frDKaIIKQCPkG2DC6QMZ02BhPbpnrEtZR5V+udc=
+jobs:
+  include:
+  - stage: test
+    name: Run Go tests
+    install:
+    - make install-goimports
+    script:
+    - make
+  - stage: test
+    name: Run Security Scan
+    install:
+    - make install-aws-cli
+    - eval $(aws ecr get-login --region eu-west-1 --no-include-email)
+    script:
+    - docker run --rm -v $(pwd):/code -e TRAVIS -e SNYK_TOKEN -e REPO=$TRAVIS_REPO_SLUG $SECSCAN_IMAGE

@@ -1,0 +1,281 @@
+swagger: '2.0'
+info:
+  version: "0.0.1"
+  title: Form3 Corelib data structures.
+host: api.form3.tech
+schemes:
+  - https
+basePath: /v1
+paths:
+
+  /keys:
+    get:
+      summary: List all Keys
+      tags:
+        - System
+      responses:
+        200:
+          description: List of Keys
+          schema:
+            $ref: "#/definitions/KeyDetailsListResponse"
+
+  /keys/{key_id}:
+    get:
+      summary: Fetch Key
+      tags:
+        - System
+      parameters:
+        - name: key_id
+          in: path
+          description: Key Id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: Key details
+          schema:
+            $ref: "#/definitions/KeyDetailsResponse"
+
+  /keys/{key_id}/certificates:
+    get:
+      summary: List all certificates
+      tags:
+        - System
+      parameters:
+        - name: key_id
+          in: path
+          description: Key Id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: List of certificates
+          schema:
+            $ref: "#/definitions/CertificateDetailsListResponse"
+
+  /keys/{key_id}/certificates/{certificate_id}:
+    get:
+      summary: Fetch certificate
+      tags:
+        - System
+      parameters:
+        - name: key_id
+          in: path
+          description: Key Id
+          required: true
+          type: string
+          format: uuid
+        - name: certificate_id
+          in: path
+          description: Certificate Id
+          required: true
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: Certificate details
+          schema:
+            $ref: "#/definitions/CertificateDetailsResponse"
+
+  /billingreport:
+    get:
+      summary: Billing Report
+      tags:
+        - BillingApi
+      parameters:
+        - name: from
+          in: query
+          description: Date from which the report should be generated (inclusive). If set, to must be set.
+          required: false
+          type: string
+          format: date
+        - name: to
+          in: query
+          description: Date to which the report should be generated (inclusive). If set, from must be set.
+          required: false
+          type: string
+          format: date
+      produces:
+        - application/json; charset=utf-8
+      responses:
+        200:
+          description: Billing Report
+          schema:
+            $ref: '#/definitions/BillingReportResponse'
+        400:
+          description: Billing report query error
+          schema:
+            $ref: "#/definitions/ApiError"
+
+definitions:
+
+  ApiError:
+    type: object
+    properties:
+      error_message:
+        type: string
+      error_code:
+        type: string
+        format: uuid
+
+  BillingReportResponse:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/BillingRecord'
+
+  BillingRecord:
+    type: object
+    properties:
+      customer:
+        type: string
+      product:
+        type: string
+      event_type:
+        type: string
+      event_count:
+        type: integer
+      event_amount:
+        type: string
+
+  CertificateDetailsResponse:
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/Certificate'
+      links:
+        $ref: '#/definitions/Links'
+
+  CertificateDetailsListResponse:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Certificate'
+      links:
+        $ref: '#/definitions/Links'
+
+  KeyDetailsResponse:
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/Key'
+      links:
+        $ref: '#/definitions/Links'
+
+  KeyDetailsListResponse:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Key'
+      links:
+        $ref: '#/definitions/Links'
+
+  Key:
+    type: object
+    properties:
+      type:
+        type: string
+      id:
+        type: string
+        format: uuid
+      version:
+        type: integer
+        minimum: 0
+      organisation_id:
+        type: string
+        format: uuid
+      attributes:
+        $ref: "#/definitions/KeyAttributes"
+
+  Certificate:
+    type: object
+    properties:
+      type:
+        type: string
+      id:
+        type: string
+        format: uuid
+      version:
+        type: integer
+        minimum: 0
+      organisation_id:
+        type: string
+        format: uuid
+      attributes:
+        $ref: "#/definitions/CertificateAttributes"
+
+  CertificateAttributes:
+    type: object
+    required:
+      - certificate
+    properties:
+      certificate:
+        type: string
+      subject:
+        type: string
+      issuing_certificates:
+        type: array
+        items:
+          type: string
+      expires:
+        type: string
+        format: date-time
+
+  KeyType:
+    type: string
+    enum: &KeyType
+      - RSA
+      - EC
+      - AES
+      - 3DES
+
+  CurveType:
+    type: string
+    enum: &CurveType
+      - PRIME256V1
+      - SECP256R1
+      - SECP384R1
+      - SECP256K1
+
+  KeyAttributes:
+    type: object
+    properties:
+      type:
+        type: string
+        enum: *KeyType
+        default: RSA
+      curve:
+        type: string
+        enum: *CurveType
+      subject:
+        type: string
+      private_key:
+        type: string
+      public_key:
+        type: string
+      description:
+        type: string
+      certificate_signing_request:
+        type: string
+
+  Links:
+    type: object
+    properties:
+      self:
+        type: string
+      first:
+        type: string
+      prev:
+        type: string
+      next:
+        type: string
+      last:
+        type: string
