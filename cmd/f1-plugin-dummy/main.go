@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	plugin.New().
+	plugin.NewServer().
 		WithScenario("dummyAdmission", scenarios.AdmissionScenario).
 		WithScenario("dummySubmission", scenarios.SubmissionScenario).
 		Serve()

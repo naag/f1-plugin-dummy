@@ -66,8 +66,8 @@ github.com/mitchellh/go-testing-interface v0.0.0-20171004221916-a61a99592b77 h1:
 github.com/mitchellh/go-testing-interface v0.0.0-20171004221916-a61a99592b77/go.mod h1:kRemZodwjscx+RGhAo8eIhFbs2+BFgRtFPeD/KE+zxI=
 github.com/mitchellh/go-testing-interface v1.14.1 h1:jrgshOhYAUVNMAJiKbEu7EqAwgJJ2JqpQmpLJOu07cU=
 github.com/mitchellh/go-testing-interface v1.14.1/go.mod h1:gfgS7OtZj6MA4U1UrDRp04twqAjfvlZyCfX3sDjEym8=
-github.com/naag/f1-api v0.0.0-20210303132545-b4c27d91919b h1:iiuogZviEdtxucXUiXtq065g6MW1ffKpFyLucnfIfsI=
-github.com/naag/f1-api v0.0.0-20210303132545-b4c27d91919b/go.mod h1:iBFWbXgiE4C3298e86VwT2Qx7c9Cli7hksMdn5k4k3I=
+github.com/naag/f1-api v0.0.1 h1:uFl1O1MgbiMbcx6lCWl7nK03HFHPDpCW/zrqIFI92zs=
+github.com/naag/f1-api v0.0.1/go.mod h1:1kgwdHjS5vMfnlZP3UmlySYxMlsyFbp4JqW5Ud5Nzok=
 github.com/oklog/run v1.0.0 h1:Ru7dDtJNOyC66gQ5dQmaCa0qIsAUFY3sFpK1Xk8igrw=
 github.com/oklog/run v1.0.0/go.mod h1:dlhp/R75TPv97u0XWUtDeV/lRKWPKSdTuV0TZvrmrQA=
 github.com/oklog/run v1.1.0 h1:GEenZ1cK0+q0+wsJew9qUg/DyD8k3JzYsZAi5gYi2mA=
